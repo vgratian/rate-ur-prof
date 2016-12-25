@@ -132,7 +132,7 @@ bool Students::is_registered(std::string email) {
 
 bool Students::check_psw(std::string email, std::string psw) {
   student* element = find(m_root, email);
-  if(element->psw == psw)
+  if(element != NULL && element->psw == psw)
     return true;
   return false;
 }

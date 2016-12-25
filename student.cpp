@@ -131,7 +131,10 @@ bool Students::is_registered(std::string email) {
 }
 
 bool Students::check_psw(std::string email, std::string psw) {
-  return true; //TODO: under construction
+  student* element = find(m_root, email);
+  if(element->psw == psw)
+    return true;
+  return false;
 }
 
 // Returns student with email

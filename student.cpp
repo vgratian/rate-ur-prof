@@ -125,7 +125,7 @@ void Students::destroy_tree(student* element) {
 // Checks if tree has any student with given email
 bool Students::is_registered(std::string email) {
   student* element = find(m_root, email);
-  if(element->email == email)
+  if(element != NULL && element->email == email)
     return true;
   return false;
 }

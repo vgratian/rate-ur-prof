@@ -12,7 +12,7 @@ struct rating {
 struct student {
   std::string name;
   std::string email;
-  std::string psw;
+  std::string password;
   student* left;
   student* right;
   student* parent;
@@ -24,18 +24,18 @@ class Students {
 private:
   student* m_root;
   unsigned int m_size;
-  void insert_data(std::string email, std::string psw);
-  void insert_deeper(student* parent, std::string email, std::string psw);
+  void insert_data(std::string email, std::string password);
+  void insert_deeper(student* parent, std::string email, std::string password);
   void destroy_tree(student* element);
   student* find(student* element, std::string email);
 
 public:
   Students();
   ~Students();
-  void insert(std::string email, std::string psw);
+  void insert(std::string email, std::string password);
   int get_size();
   bool is_registered(std::string email);
-  bool check_psw(std::string email, std::string psw);
+  bool check_password(std::string email, std::string password);
 };
 
 Students::Students() {
@@ -48,10 +48,10 @@ Students::Students() {
   std::string str;
   while (std::getline(file, str)) {
     std::string email = str.substr(0, str.find(";"));
-    std::string psw = str.substr(str.find(";") + 1);
+    std::string password = str.substr(str.find(";") + 1);
 
     // create new node in the tree
-    insert_data(email, psw);
+    insert_data(email, password);
    }
 }
 
@@ -59,39 +59,39 @@ Students::~Students() {
   destroy_tree(m_root);
 }
 
-void Students::insert(std::string email, std::string psw) {
+void Students::insert(std::string email, std::string password) {
   // writes new data into file before adding to tree
 
   std::ofstream file;
   file.open("students.csv", std::ios_base::app);
-  file << email << ";" << psw << std::endl;
+  file << email << ";" << password << std::endl;
 
-  insert_data(email, psw);
+  insert_data(email, password);
 }
 
-void Students::insert_data(std::string email, std::string psw) {
+void Students::insert_data(std::string email, std::string password) {
   if(m_root == NULL) {
     m_root = new student;   // creating the root if it's empty
     m_root->email = email;
-    m_root->psw = psw;
+    m_root->password = password;
     m_root->left = NULL;
     m_root->right = NULL;
     m_root->parent = NULL;
     m_size = 1;
   }
   else {
-    insert_deeper(m_root, email, psw);
+    insert_deeper(m_root, email, password);
   }
 }
 
-void Students::insert_deeper(student* parent, std::string email, std::string psw) {
+void Students::insert_deeper(student* parent, std::string email, std::string password) {
   if(email < parent->email) {
     if(parent->left != NULL)
-      insert_deeper(parent->left, email, psw);
+      insert_deeper(parent->left, email, password);
     else {
       parent->left = new student;
       parent->left->email = email;
-      parent->left->psw = psw;
+      parent->left->password = password;
       parent->left->left = NULL;
       parent->left->right = NULL;
       parent->left->parent = parent;
@@ -100,11 +100,11 @@ void Students::insert_deeper(student* parent, std::string email, std::string psw
   }
   else if(email >= parent->email) {
     if(parent->right != NULL)
-      insert_deeper(parent->right, email, psw);
+      insert_deeper(parent->right, email, password);
     else {
       parent->right = new student;
       parent->right->email = email;
-      parent->right->psw = psw;
+      parent->right->password = password;
       parent->right->left = NULL;
       parent->right->right = NULL;
       parent->right->parent = parent;
@@ -130,9 +130,9 @@ bool Students::is_registered(std::string email) {
   return false;
 }
 
-bool Students::check_psw(std::string email, std::string psw) {
+bool Students::check_password(std::string email, std::string password) {
   student* element = find(m_root, email);
-  if(element != NULL && element->psw == psw)
+  if(element != NULL && element->password == password)
     return true;
   return false;
 }

@@ -1,101 +1,147 @@
+/*
+This is a class that provides an interface for the user, allowing them
+to login, logout, register, check rating/reviews of professors and add new reviews
+*/
+
 class Session {
 private:
+  // member variables:
+  Students* uni;
   std::string m_email;
-  std::string m_psw;
-  Students* aua;
+  std::string m_password;
   bool loggedin;
+  // member functions:
   void start();
   void login();
+  void logout();
   void registr();
-  void get_details();
-  bool valid_email(std::string email);
+  void browse();
+  void rate();
+  void get_login_details();
+  std::string get_hash_value(std::string raw_password);
+  bool is_valid_email(std::string email);
 
 public:
   Session();
 };
 
 Session::Session() {
-  aua = new Students;
+  uni = new Students;
   loggedin = false;
   start();
 }
 
 void Session::start() {
   int choice;
+  std::cout << "\n**Welcome to Rate Professor**\n";
+  std::cout << "Currently " << uni->get_size() << " students are registered\n"; // This line is only for testing
+  std::cout << "Choose your option:\n";
+  // Menu for logged in user
+  if(loggedin) {
+    std::cout << "1: Logout\n2: Rate\n3: Browse\n";
+    std::cin >> choice;
 
-  std::cout << std::endl << std::endl;
-  std::cout << "Welcome to Rate Professor" << std::endl;
-  std::cout << "Choose your options:" << std::endl;
-  std::cout << "1: Login" << std::endl << "2: Register" << std::endl;
+    if(choice == 1) logout();
+    else if(choice == 2) rate();
+    else if(choice == 3) browse();
+    else std::cout << "Please enter 1 or 2" << std::endl;
+  }
+  // Menu for not logged in or registered user
+  else {
+    std::cout << "1: Login\n2: Register\n3: Browse\n";
+    std::cin >> choice;
 
-  std::cin >> choice;
-
-  if(choice == 1) return login();
-  else if(choice == 2) return registr();
-  else std::cout << "Please enter 1 or 2" << std::endl;
-
-  return start();
+    if(choice == 1) login();
+    else if(choice == 2) registr();
+    else if(choice == 3) browse();
+    else std::cout << "Please enter 1 or 2" << std::endl;
+  }
 }
 
 void Session::login() {
-  get_details();
-
-  if(aua->is_registered(m_email)) {
-    if(aua->check_psw(m_email, m_psw)) {
-      std::cout << "log in succesful" << std::endl;
+  // First make sure user is already not logged in
+  if(loggedin) {
+    std::cout << "already logged in\n";
+    return start();
+  }
+  // Proceed with login
+  else {
+    get_login_details();
+    std::cout << "mail: " << m_email << ", psw: " << m_password << "\n"; // TODO remove
+    // Check if email and password are correct
+    if(uni->is_registered(m_email)) {
+      if(uni->check_password(m_email, m_password)) {
+          std::cout << "log in succesful\n";
+          loggedin = true;
+          return start();
+      }
+      else {
+        std::cout << "password incorrect\n";
+        return login();
+      }
+    }
+    else {
+      std::cout << "email incorrect\n";
+      return login();
     }
   }
+}
 
-  else {
-    std::cout << "email or password incorrect" << std::endl;
-  }
+void Session::logout() {
+  m_email.clear();
+  m_password.clear();
+  loggedin = false;
+  std::cout << "loggout succeful\n";
+  return start();
 }
 
 void Session::registr() {
-
-  std::hash <std::string> hash_fn; // This hash function is not safe
-  std::string raw_psw;
-
-  std::cout << std::endl;
-  std::cout << "Regsitation page\n";
-
-  get_details();
+  std::cout << "\n**Registration page**\n";
+  get_login_details();
 
   // Check if user is not already registered
-
-  if(aua->is_registered(m_email)) {
-    std::cout << "Email already registered\n";
+  if(uni->is_registered(m_email)) {
+    std::cout << "email already registered\n";
+    return registr();
   }
-  else if(!valid_email(m_email)) {
-    std::cout << "Invalid email"
-    << "Please choose email associated with your university.\n";
+  // Check if email is from university
+  else if(!is_valid_email(m_email)) {
+    std::cout << "invalid email, please choose email associated with your university.\n";
     return registr();
   }
 
-  aua->insert(m_email, m_psw);
-  std::cout << "Welcome " << m_email << "!\n";
-  std::cout << "Tree size:" << aua->get_size() << "\n";
-  //loggedin = true;
-  //return start();
+  uni->insert(m_email, m_password);
+  std::cout << "registration succesful\n";
+  loggedin = true;
+  return start();
 }
 
-void Session::get_details() {
-  std::string raw_psw;
-  std::hash <std::string> hashfn;
+void Session::rate() {
+  ;
+}
 
-  std::cout << "E-mail: ";
+void Session::browse() {
+  ;
+}
+
+void Session::get_login_details() {
+  std::cout << "e-mail: ";
   std::cin >> m_email;
-  std::cout << "Password: ";
-  std::cin >> raw_psw;
+  std::cout << "password: ";
+  std::cin >> m_password;
+  m_password = get_hash_value(m_password);
+}
 
-  size_t hash_value = hashfn(raw_psw);
-
+std::string Session::get_hash_value(std::string raw_password) {
+  size_t hash_value;
+  std::hash <std::string> hashfn; // TODO Replace with safe(r) hash function?
+  hash_value = hashfn(raw_password);
   std::stringstream ss;
   ss << hash_value;
-  m_psw = ss.str();
+  return ss.str();
 }
 
-bool Session::valid_email(std::string email) {
+bool Session::is_valid_email(std::string email) {
   std::string domain = email.substr(email.find("@") + 1);
   if(domain == "edu.aua.am")
     return true;

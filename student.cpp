@@ -4,11 +4,6 @@ This is a binary tree that contains all the students from an institution
 saved in the "students.csv" file
 */
 
-struct rating {
-  Professor* professor;
-  unsigned int value;
-};
-
 struct student {
   std::string name;
   std::string email;

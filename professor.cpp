@@ -1,7 +1,13 @@
-class Professor {
+
+struct rating {
+  Professor* professor;
+  unsigned int value;
+};
+
+class Professors {
 private:
   std::string name;
-  std::string courses[100];
+  std::string courses[50];
   int rating;
   void update_rating();
 

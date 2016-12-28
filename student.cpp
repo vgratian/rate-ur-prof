@@ -8,11 +8,11 @@ struct student {
   std::string name;
   std::string email;
   std::string password;
+  std::string courses[50];
+  rating ratings[50];
   student* left;
   student* right;
   student* parent;
-  rating ratings[100];
-  std::string courses[100];
 };
 
 class Students {
@@ -21,8 +21,8 @@ private:
   unsigned int m_size;
   void insert_data(std::string email, std::string password);
   void insert_deeper(student* parent, std::string email, std::string password);
-  void destroy_tree(student* element);
-  student* find(student* element, std::string email);
+  void destroy_tree(student* node);
+  student* find(student* node, std::string email);
 
 public:
   Students();
@@ -108,39 +108,39 @@ void Students::insert_deeper(student* parent, std::string email, std::string pas
   }
 }
 
-// Deletes all elements in the tree
-void Students::destroy_tree(student* element) {
-  if(element != NULL){
-    destroy_tree(element->left);
-    destroy_tree(element->right);
-    delete element;
+// Deletes all nodes in the tree
+void Students::destroy_tree(student* node) {
+  if(node != NULL){
+    destroy_tree(node->left);
+    destroy_tree(node->right);
+    delete node;
   }
 }
 
 // Checks if tree has any student with given email
 bool Students::is_registered(std::string email) {
-  student* element = find(m_root, email);
-  if(element != NULL && element->email == email)
+  student* node = find(m_root, email);
+  if(node != NULL && node->email == email)
     return true;
   return false;
 }
 
 bool Students::check_password(std::string email, std::string password) {
-  student* element = find(m_root, email);
-  if(element != NULL && element->password == password)
+  student* node = find(m_root, email);
+  if(node != NULL && node->password == password)
     return true;
   return false;
 }
 
 // Returns student with email
-student* Students::find(student* element, std::string  email) {
-  if(element != NULL) {
-    if(email == element->email)
-      return element;
-    else if(email < element->email)
-      find(element->left, email);
-    else if(email > element->email)
-      find(element->right, email);
+student* Students::find(student* node, std::string  email) {
+  if(node != NULL) {
+    if(email == node->email)
+      return node;
+    else if(email < node->email)
+      find(node->left, email);
+    else if(email > node->email)
+      find(node->right, email);
   }
   else
     return NULL;

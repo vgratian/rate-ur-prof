@@ -160,16 +160,3 @@ void Professors::destroy_tree(professor* node) {
     delete node;
   }
 }
-
-int main() {
-
-  Professors aua;
-
-  std::cout << "Size: " << aua.get_size() << "\n";
-  aua.get_profile("Sona Asatrian");
-  aua.get_profile("Artour Davlatian");
-  aua.get_profile("Vachagan Gratian");
-  //aua.get_score("Sona_Asatrian");
-
-  return 0;
-}

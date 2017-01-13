@@ -35,6 +35,7 @@ public:
   int get_size();
   void get_profile(std::string name);
   void add_rating();
+  bool check_name(std::string name);
 };
 
 Professors::Professors() {
@@ -181,4 +182,11 @@ void Professors::destroy_tree(professor* node) {
     destroy_tree(node->right);
     delete node;
   }
+}
+
+bool Professors::check_name(std::string name) {
+  professor* node = find(m_root, get_id(name));
+  if(node == NULL)
+    return false;
+  return true;
 }

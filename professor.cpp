@@ -1,11 +1,12 @@
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <sstream>
-#include <typeinfo>
+/*
+This is a binary tree that contains all the instructors from an institution
+(eg. a university). Once initiated it loads instructors with their reviews and
+ratings saved in the "professors.csv" file
+*/
 
 struct professor {
   unsigned int id;
+  unsigned int score;
   std::string name;
   std::string students; //students that rated this professor (emails)
   std::string reviews;
@@ -20,6 +21,7 @@ private:
   professor* m_root;
   unsigned int m_size;
   unsigned int get_id(std::string name);
+  unsigned int get_score(std::string ratings);
   void insert_to_tree(std::string name, std::string students, std::string reviews, std::string ratings);
   void insert_deeper(professor* root, unsigned int id, std::string name, std::string students, std::string reviews, std::string ratings);
   void destroy_tree(professor* root);
@@ -31,7 +33,6 @@ public:
   ~Professors();
   int get_rating();
   int get_size();
-  void get_score(std::string name);
   void get_profile(std::string name);
   void add_rating();
 };
@@ -76,6 +77,7 @@ void Professors::insert_to_tree(std::string name, std::string students, std::str
     m_root->students = students;
     m_root->reviews = reviews;
     m_root->ratings = ratings;
+    m_root->score = get_score(ratings);
     m_root->left = NULL;
     m_root->right = NULL;
     m_root->up = NULL;
@@ -95,6 +97,7 @@ void Professors::insert_deeper(professor* parent, unsigned int id, std::string n
       parent->left->students = students;
       parent->left->reviews = reviews;
       parent->left->ratings = ratings;
+      parent->left->score = get_score(ratings);
       parent->left->left = NULL;
       parent->left->right = NULL;
       parent->left->up = parent;
@@ -111,6 +114,7 @@ void Professors::insert_deeper(professor* parent, unsigned int id, std::string n
       parent->right->students = students;
       parent->right->reviews = reviews;
       parent->right->ratings = ratings;
+      parent->right->score = get_score(ratings);
       parent->right->left = NULL;
       parent->right->right = NULL;
       parent->right->up = parent;
@@ -134,17 +138,35 @@ professor* Professors::find(professor* node, unsigned int id) {
     return NULL;
 }
 
-// Prints all details about given professor
+// Prints profile of given professor
 void Professors::get_profile(std::string name) {
   professor* node = find(m_root, get_id(name));
-  if(node != NULL && node->name == name)
-    std::cout << "Name: " << node->name << "\nReviews: " << node->reviews << "\nRatings: " << node->ratings << "\n\n";
+  if(node != NULL && node->name == name) {
+    std::cout << "\nName: " << node->name << "  Rating: " << node->score << "\nReviews:\n";
+    std::string all_reviews = node->reviews;
+    while(all_reviews.length()) {
+      std::string next_review = all_reviews.substr(0, all_reviews.find(","));
+      std::cout << next_review << "\n";
+      all_reviews.erase(0, next_review.length() + 1);
+    }
+    std::cout << "\n";
+  }
   else
     std::cout << "No professor found with name " << name << "\n";
 }
 
-void Professors::get_score(std::string name) {
-  ;
+unsigned int Professors::get_score(std::string ratings) {
+  unsigned int sum = 0;
+  unsigned int amount = 0;
+  std::string all_ratings = ratings; // ratings in the form of a single string
+
+  while(all_ratings.length()) {
+    sum += std::stoi(all_ratings.substr(0, all_ratings.find(",")));
+    all_ratings.erase(0,2);
+    amount++;
+    }
+
+  return sum/amount;
 }
 
 // Returns number of professors in the tree

@@ -9,7 +9,7 @@ struct student {
   std::string email;
   std::string password;
   std::string courses[50];
-  rating ratings[50];
+  //  rating ratings[50];
   student* left;
   student* right;
   student* parent;
@@ -28,6 +28,7 @@ public:
   Students();
   ~Students();
   void insert(std::string email, std::string password);
+  void check_find(std::string name);
   int get_size();
   bool is_registered(std::string email);
   bool check_password(std::string email, std::string password);

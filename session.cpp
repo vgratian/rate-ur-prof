@@ -5,12 +5,12 @@ to login, logout, register, check rating/reviews of professors and add new revie
 
 class Session {
 private:
-  // member variables:
-  Students* uni;
+  Students* allstudents;
+  Professors* allprofessors;
   std::string m_email;
   std::string m_password;
   bool loggedin;
-  // member functions:
+  bool is_valid_email(std::string email);
   void start();
   void login();
   void logout();
@@ -19,14 +19,14 @@ private:
   void rate();
   void get_login_details();
   std::string get_hash_value(std::string raw_password);
-  bool is_valid_email(std::string email);
 
 public:
   Session();
 };
 
 Session::Session() {
-  uni = new Students;
+  allstudents = new Students;
+  allprofessors = new Professors;
   loggedin = false;
   start();
 }
@@ -34,32 +34,32 @@ Session::Session() {
 void Session::start() {
   int choice;
   std::cout << "\n**Welcome to Rate Professor**\n";
-  std::cout << "Currently " << uni->get_size() << " students are registered\n"; // This line is only for testing
+  std::cout << "Currently " << allstudents->get_size() << " students are registered\n"; // This line is only for testing
   std::cout << "Choose your option:\n";
   // Menu for logged in user
   if(loggedin) {
-    std::cout << "1: Logout\n2: Rate\n3: Browse\n";
+    std::cout << "1: Logout\n2: Rate\n3: Browse reviews\n";
     std::cin >> choice;
 
     if(choice == 1) logout();
     else if(choice == 2) rate();
     else if(choice == 3) browse();
-    else std::cout << "Please enter 1 or 2" << std::endl;
+    else std::cout << "Please enter 1, 2 or 3" << std::endl;
   }
-  // Menu for not logged in or registered user
+  // Menu for not logged in user
   else {
-    std::cout << "1: Login\n2: Register\n3: Browse\n";
+    std::cout << "1: Login\n2: Register\n3: Browse reviews\n";
     std::cin >> choice;
 
     if(choice == 1) login();
     else if(choice == 2) registr();
     else if(choice == 3) browse();
-    else std::cout << "Please enter 1 or 2" << std::endl;
+    else std::cout << "Please enter 1, 2 or 3" << std::endl;
   }
 }
 
 void Session::login() {
-  // First make sure user is already not logged in
+  // Make sure user is not already logged in
   if(loggedin) {
     std::cout << "already logged in\n";
     return start();
@@ -67,10 +67,9 @@ void Session::login() {
   // Proceed with login
   else {
     get_login_details();
-    std::cout << "mail: " << m_email << ", psw: " << m_password << "\n"; // TODO remove
     // Check if email and password are correct
-    if(uni->is_registered(m_email)) {
-      if(uni->check_password(m_email, m_password)) {
+    if(allstudents->is_registered(m_email)) {
+      if(allstudents->check_password(m_email, m_password)) {
           std::cout << "log in succesful\n";
           loggedin = true;
           return start();
@@ -100,17 +99,17 @@ void Session::registr() {
   get_login_details();
 
   // Check if user is not already registered
-  if(uni->is_registered(m_email)) {
+  if(allstudents->is_registered(m_email)) {
     std::cout << "email already registered\n";
     return registr();
   }
-  // Check if email is from university
+  // Check if email is from allstudents
   else if(!is_valid_email(m_email)) {
     std::cout << "invalid email, please choose email associated with your university.\n";
     return registr();
   }
 
-  uni->insert(m_email, m_password);
+  allstudents->insert(m_email, m_password);
   std::cout << "registration succesful\n";
   loggedin = true;
   return start();
@@ -121,7 +120,15 @@ void Session::rate() {
 }
 
 void Session::browse() {
-  ;
+  std::string professor_name;
+
+  std::cout << "Please, enter Professor's full name: ";
+  std::cin.clear();
+  std::cin.ignore(1); // Without this getline doesn't work
+  std::getline (std::cin,professor_name);
+  std::cout << professor_name << "!\n";
+
+  allprofessors->get_profile(professor_name);
 }
 
 void Session::get_login_details() {

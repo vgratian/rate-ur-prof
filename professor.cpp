@@ -2,6 +2,8 @@
 This is a binary tree that contains all the instructors from an institution
 (eg. a university). Once initiated it loads instructors with their reviews and
 ratings saved in the "professors.csv" file
+
+Required libraries: iostream, fstream
 */
 
 struct professor {
@@ -26,7 +28,7 @@ private:
   void insert_deeper(professor* root, unsigned int id, std::string name, std::string students, std::string reviews, std::string ratings);
   void destroy_tree(professor* root);
   void update_rating();
-  professor* find(professor* node, unsigned int);
+  professor* find(professor* node, unsigned int id);
 
 public:
   Professors();
@@ -52,7 +54,7 @@ Professors::Professors() {
     str.erase(0, students.length()+1);
     std::string reviews = str.substr(0, str.find(";"));
     str.erase(0, reviews.length()+1);
-    std::string ratings = str;
+    std::string ratings = str.substr(0, str.find(";"));
     insert_to_tree(name, students, reviews, ratings);
    }
 }
@@ -63,9 +65,8 @@ Professors::~Professors() {
 
 // Generates id by hashing name
 unsigned int Professors::get_id(std::string name) {
-  unsigned int id;
   std::hash <std::string> hashfoo;
-  id = hashfoo(name);
+  unsigned int  id = hashfoo(name);
   return id;
 }
 
@@ -157,17 +158,20 @@ void Professors::get_profile(std::string name) {
 }
 
 unsigned int Professors::get_score(std::string ratings) {
-  unsigned int sum = 0;
-  unsigned int amount = 0;
-  std::string all_ratings = ratings; // ratings in the form of a single string
+  if(ratings.length()) { // Exception handling for when ratings is empty
+    unsigned int sum = 0;
+    unsigned int amount = 0;
+    std::string all_ratings = ratings; // Ratings in the form of a single string
 
-  while(all_ratings.length()) {
-    sum += std::stoi(all_ratings.substr(0, all_ratings.find(",")));
-    all_ratings.erase(0,2);
-    amount++;
+    while(all_ratings.length()) {
+      sum += std::stoi(all_ratings.substr(0, all_ratings.find(",")));
+      all_ratings.erase(0,2);
+      amount++;
     }
-
-  return sum/amount;
+    return sum/amount;
+  }
+  else
+    return 0;
 }
 
 // Returns number of professors in the tree

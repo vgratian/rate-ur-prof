@@ -36,7 +36,7 @@ public:
   int get_rating();
   int get_size();
   void get_profile(std::string name);
-  void add_rating();
+  void add_rating(std::string name, unsigned int rating);
   bool check_name(std::string name);
 };
 
@@ -155,6 +155,12 @@ void Professors::get_profile(std::string name) {
   }
   else
     std::cout << "No professor found with name " << name << "\n";
+}
+
+void Professors::add_rating(std::string name, unsigned int rating) {
+  professor* node = find(m_root, get_id(name));
+  node->ratings += std::to_string(rating);
+  node->ratings += ",";
 }
 
 unsigned int Professors::get_score(std::string ratings) {

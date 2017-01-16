@@ -22,6 +22,7 @@ private:
 
 public:
   Session();
+  ~Session();
 };
 
 Session::Session() {
@@ -29,6 +30,11 @@ Session::Session() {
   allprofessors = new Professors;
   loggedin = false;
   start();
+}
+
+Session::~Session() {
+  delete allstudents;
+  delete allprofessors;
 }
 
 void Session::start() {
@@ -66,9 +72,10 @@ void Session::login() {
   }
   // Proceed with login
   else {
+    startlogin:
     get_login_details();
     // Check if email and password are correct
-    if(allstudents->is_registered(m_email)) {
+    if(allstudents->check_email(m_email)) {
       if(allstudents->check_password(m_email, m_password)) {
           std::cout << "log in succesful\n";
           loggedin = true;
@@ -99,7 +106,7 @@ void Session::registr() {
   get_login_details();
 
   // Check if user is not already registered
-  if(allstudents->is_registered(m_email)) {
+  if(allstudents->check_email(m_email)) {
     std::cout << "email already registered\n";
     return registr();
   }
@@ -116,7 +123,30 @@ void Session::registr() {
 }
 
 void Session::rate() {
-  ;
+  std::string professor_name;
+  std::string review;
+  unsigned int rate;
+
+  std::cout << "Please, enter Professor's full name: ";
+  std::cin.clear();
+  std::cin.ignore(1); // Without this getline doesn't work
+  std::getline (std::cin,professor_name);
+
+  // Check if professor with given name exists
+  if(!allprofessors->check_name(professor_name)){
+    std::cout << "Professor not found. Try again.";
+    //return rate();
+  }
+
+  std::cout << "Rate this professor (number between 1 and 5): ";
+  std::cin >> rate;
+
+  std::cout << "Please give constructive feedback: ";
+  std::cin.clear();
+  std::cin.ignore(1); // Without this getline doesn't work
+  std::getline (std::cin,review);
+
+  allprofessors->add_review(professor_name, m_email, review, rate);
 }
 
 void Session::browse() {

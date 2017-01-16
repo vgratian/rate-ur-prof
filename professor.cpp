@@ -3,7 +3,7 @@ This is a binary tree that contains all the instructors from an institution
 (eg. a university). Once initiated it loads instructors with their reviews and
 ratings saved in the "professors.csv" file
 
-Required libraries: iostream, fstream
+Required libraries: iostream, fstream, sstream
 */
 
 struct professor {
@@ -28,6 +28,9 @@ private:
   void insert_deeper(professor* root, unsigned int id, std::string name, std::string students, std::string reviews, std::string ratings);
   void destroy_tree(professor* root);
   void update_rating();
+  void write_to_file();
+  void write_inorder(professor* node);
+  void write_line(std::string name, std::string students, std::string reviews, std::string ratings);
   professor* find(professor* node, unsigned int id);
 
 public:
@@ -36,7 +39,7 @@ public:
   int get_rating();
   int get_size();
   void get_profile(std::string name);
-  void add_rating(std::string name, unsigned int rating);
+  void add_review(std::string name, std::string email, std::string review, unsigned int rating);
   bool check_name(std::string name);
 };
 
@@ -60,9 +63,46 @@ Professors::Professors() {
 }
 
 Professors::~Professors() {
+  write_to_file();
   destroy_tree(m_root);
 }
 
+void Professors::write_to_file() {
+  std::ofstream file;
+  file.open("professors.csv", std::ios::trunc);
+  file.close();
+  write_inorder(m_root);
+  }
+
+void Professors::write_inorder(professor* node) {
+  if(node != NULL) {
+    write_inorder(node->left);
+    write_line(node->name, node->students, node->reviews, node->ratings);
+    write_inorder(node->right);
+  }
+}
+
+void Professors::write_line(std::string name, std::string students, std::string reviews, std::string ratings) {
+  std::string fulldata;
+  std::stringstream ss;
+  ss << name << ";" << students << ";" << reviews << ";" << ratings << "\n";
+  fulldata = ss.str();
+
+  std::ofstream file;
+  file.open("professors.csv", std::ios::app);
+  file << fulldata;
+  file.close();
+}
+
+// Deletes all nodes in the tree: TODO: Do we need this?
+void Professors::destroy_tree(professor* node) {
+  if(node != NULL){
+    destroy_tree(node->left);
+    destroy_tree(node->right);
+    delete node;
+    //m_size--;
+  }
+}
 // Generates id by hashing name
 unsigned int Professors::get_id(std::string name) {
   std::hash <std::string> hashfoo;
@@ -157,10 +197,19 @@ void Professors::get_profile(std::string name) {
     std::cout << "No professor found with name " << name << "\n";
 }
 
-void Professors::add_rating(std::string name, unsigned int rating) {
+void Professors::add_review(std::string name, std::string email, std::string review, unsigned int rating) {
   professor* node = find(m_root, get_id(name));
-  node->ratings += std::to_string(rating);
-  node->ratings += ",";
+  if(node != NULL && node->name == name) {
+    node->students += email += ",";
+    node->reviews += "*";
+    node->reviews += review += "*,";
+    node->ratings += std::to_string(rating) += ",";
+    node->score = get_score(node->ratings);
+    std::cout << "You succesfully reviewed " << node->name << "!\n";
+  }
+  else {
+    std::cout << "No professor found with name " << name << "\n";
+  }
 }
 
 unsigned int Professors::get_score(std::string ratings) {
@@ -183,15 +232,6 @@ unsigned int Professors::get_score(std::string ratings) {
 // Returns number of professors in the tree
 int Professors::get_size() {
   return m_size;
-}
-
-// Deletes all nodes in the tree: TODO: Do we need this?
-void Professors::destroy_tree(professor* node) {
-  if(node != NULL){
-    destroy_tree(node->left);
-    destroy_tree(node->right);
-    delete node;
-  }
 }
 
 bool Professors::check_name(std::string name) {

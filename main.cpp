@@ -10,7 +10,7 @@
 #include "rating.cpp"
 #include "session.cpp"
 
-main() {
+int main() {
 
   Session hello;
 

@@ -1,21 +1,25 @@
 
 ***Status:***
 
-backend:
-Student.cpp - ~90% completion (two methods need to be written)
-Professor.cpp - ~50% completion
+<s>Expected release date of Alfa version: January 10, 2017.</s>
 
-frontend:
-?
-(still looking for an easy-to-start web-framework)
+Alpha version: complete as of 16 Jan 2017!
+This is a entirely minimal version with a console based interface,
+Allows users to login, register, add review and browse reviews.
 
-Expected release date of Alfa version: January 10, 2017.
+Next stage:
+A web based interface.
+Currently looking for an easy-to-start http-framework. (Maybe a python framework?)
+(I know how to run a django/flask webserver, but how do I combine a c++ backend with python web server?)
+
+Expected Beta (with web interface) release date: 6 February, 2017.
+
 
 ***rate ur professor:***
 
 Here is an application/software that allows students to rate and review their
-professors. It is especially designed for American University of Armenia, but
-can be used for any other university as well.
+professors. The current version is designed for students of American University of Armenia,
+but the software can be used for any other university as well.
 
 I hope that it will help students to choose professors that better meet their
 expectations. Constructive feedback will also help professors to improve their
@@ -36,9 +40,11 @@ Before Login:
 After Login:
 
 1. Logout
+
 2. Rate a professor
   1. Select Professor (returns list of all professors)
   2. Enter number between 1 and 5
   3. Enter feedback/review
-3. Browse
+
+3. Browse reviews
   1. Select Professor

@@ -4,7 +4,8 @@
 <s>Expected release date of Alfa version: January 10, 2017.</s>
 
 Alpha version: complete as of 16 Jan 2017!
-This is a entirely minimal version with a console based interface,
+
+This is an entirely minimal version with a console based interface,
 Allows users to login, register, add review and browse reviews.
 
 Next stage:

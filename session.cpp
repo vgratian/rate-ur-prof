@@ -156,7 +156,6 @@ void Session::browse() {
   std::cin.clear();
   std::cin.ignore(1); // Without this getline doesn't work
   std::getline (std::cin,professor_name);
-  std::cout << professor_name << "!\n";
 
   allprofessors->get_profile(professor_name);
 }

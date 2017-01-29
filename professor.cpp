@@ -38,8 +38,8 @@ public:
   ~Professors();
   int get_rating();
   int get_size();
-  void get_profile(std::string name);
-  void add_review(std::string name, std::string email, std::string review, unsigned int rating);
+  std::string get_profile(std::string name);
+  std::string add_review(std::string name, std::string email, std::string review, unsigned int rating);
   bool check_name(std::string name);
 };
 
@@ -181,23 +181,18 @@ professor* Professors::find(professor* node, unsigned int id) {
 }
 
 // Prints profile of given professor
-void Professors::get_profile(std::string name) {
+std::string Professors::get_profile(std::string name) {
   professor* node = find(m_root, get_id(name));
   if(node != NULL && node->name == name) {
-    std::cout << "\nName: " << node->name << "  Rating: " << node->score << "\nReviews:\n";
-    std::string all_reviews = node->reviews;
-    while(all_reviews.length()) {
-      std::string next_review = all_reviews.substr(0, all_reviews.find(","));
-      std::cout << next_review << "\n";
-      all_reviews.erase(0, next_review.length() + 1);
-    }
-    std::cout << "\n";
+    std::stringstream ss;
+    ss << "name: " << node->name << "  Rating: " << node->score << "\nReviews:\n" << node->reviews << "\n";
+    return ss.str();
   }
   else
-    std::cout << "No professor found with name " << name << "\n";
+    return "Oops, no professor found with name " + name + "\n";
 }
 
-void Professors::add_review(std::string name, std::string email, std::string review, unsigned int rating) {
+std::string Professors::add_review(std::string name, std::string email, std::string review, unsigned int rating) {
   professor* node = find(m_root, get_id(name));
   if(node != NULL && node->name == name) {
     node->students += email += ",";
@@ -205,10 +200,10 @@ void Professors::add_review(std::string name, std::string email, std::string rev
     node->reviews += review += "*,";
     node->ratings += std::to_string(rating) += ",";
     node->score = get_score(node->ratings);
-    std::cout << "You succesfully reviewed " << node->name << "!\n";
+    return "You succesfully reviewed " + name + "!\n";
   }
   else {
-    std::cout << "No professor found with name " << name << "\n";
+    return "Oops, no professor found with name " + name + "\n";
   }
 }
 

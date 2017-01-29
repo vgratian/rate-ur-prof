@@ -3,18 +3,22 @@
 
 <s>Expected release date of Alfa version: January 10, 2017.</s>
 
-Alpha version: complete as of 16 Jan 2017!
+*Alpha version: complete as of 16 Jan 2017!*
 
 This is an entirely minimal version with a console based interface,
 Allows users to login, register, add review and browse reviews.
 
-Next stage:
-A web based interface.
-Currently looking for an easy-to-start http-framework. (Maybe a python framework?)
-(I know how to run a django/flask webserver, but how do I combine a c++ backend with python web server?)
+*Current stage:*
+Currently adapting the existing code to be compatible with ctypes,
+so it can be easily linked to a Python web framework (flask/django).
 
-Expected Beta (with web interface) release date: 6 February, 2017.
+Expected web release date: <s>6</s> 16 February, 2017.
 
+*Next stage:*
+Store data database (instead of plain text files as it is now).
+Draw a nice HTML webpage :)
+
+Expected full release date: 15 March 2017.
 
 ***rate ur professor:***
 

@@ -1,5 +1,5 @@
 
-***RUP - Rate Ur Professor:***
+***Rate Ur Prof:***
 
 Here is an software that allows students to rate and review their professors.
 Because we think that it will help students to choose professors/classes that
@@ -33,4 +33,4 @@ web framework) that can easily run on the top of the C++ main code.
 Store data database (instead of plain text files as it is now).
 Draw a nice HTML webpage :)
 
-Expected full release date: 15 March 2017.
+Expected full beta date: 15 March 2017.

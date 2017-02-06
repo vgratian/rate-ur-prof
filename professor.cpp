@@ -200,6 +200,7 @@ std::string Professors::add_review(std::string name, std::string email, std::str
     node->reviews += review += "*,";
     node->ratings += std::to_string(rating) += ",";
     node->score = get_score(node->ratings);
+    write_to_file();
     return "You succesfully reviewed " + name + "!\n";
   }
   else {

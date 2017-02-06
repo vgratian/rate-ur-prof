@@ -53,6 +53,7 @@ Students::Students() {
     // create new node in the tree
     insert_to_tree(email, password);
    }
+   std::cout << "STUDENTS LOADED!\n";
 }
 
 Students::~Students() {

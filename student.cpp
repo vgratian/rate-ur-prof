@@ -1,9 +1,10 @@
+
 /*
 This is a binary tree that contains all the students from an institution
 (eg. a university). Once initiated it loads login details of all students
 saved in the "students.csv" file
 
-Required libraries: iostream, fstream
+Used libraries: iostream, fstream
 */
 
 struct student {
@@ -11,8 +12,6 @@ struct student {
   std::string name;
   std::string email;
   std::string password;
-  // std::string courses[50];
-  // rating ratings[50];
   student* left;
   student* right;
   student* parent;
@@ -39,21 +38,17 @@ public:
 };
 
 Students::Students() {
-
   m_root = NULL;
   m_size = 0;
-
   // Constructor will load all "saved" students and build tree
   std::ifstream file("students.csv");
   std::string str;
   while (std::getline(file, str)) {
     std::string email = str.substr(0, str.find(";"));
     std::string password = str.substr(str.find(";") + 1);
-
     // create new node in the tree
     insert_to_tree(email, password);
    }
-   std::cout << "STUDENTS LOADED!\n";
 }
 
 Students::~Students() {
@@ -62,11 +57,9 @@ Students::~Students() {
 
 void Students::insert(std::string email, std::string password) {
   // writes new data into file before adding to tree
-
   std::ofstream file;
   file.open("students.csv", std::ios_base::app);
   file << email << ";" << password << std::endl;
-
   insert_to_tree(email, password);
 }
 

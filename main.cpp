@@ -1,8 +1,15 @@
+/*
+This is a simple class in C that will allow to use the code writtin in C++
+as a C library. Isn't it amazing how a few hundreds of lines of code are
+accesible with just one simple method? TBC: this isn't a rhetorical question,
+I really if this creative solution will not cause problems in the future :)
+*/
+
 // C++ libraries
 #include <iostream>
 #include <fstream>
-#include <string>
 #include <sstream>
+#include <string>
 
 // C libraries
 #include <stdio.h>
@@ -12,13 +19,6 @@
 #include "student.cpp"
 #include "professor.cpp"
 #include "session.cpp"
-
-/*
-This is a simple class in C that will allow to use the code writtin in C++
-as a C library. Isn't it amazing how a few hundreds of lines of code are
-accesible with just one simple method? TBC: this isn't a rhetorical question,
-I really if this creative solution will not cause problems in the future :)
-*/
 
 class C_mediator {
 private:
@@ -42,9 +42,4 @@ extern "C" {
     const char* msg = new_tunnel->tunnel(query);
     return msg;
   }
-}
-
-int main() {
-
-  return 0;
 }

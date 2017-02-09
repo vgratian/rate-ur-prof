@@ -1,3 +1,4 @@
+
 /*
 This is a binary tree that contains all the instructors from an institution
 (eg. a university). Once initiated it loads instructors with their reviews and
@@ -46,7 +47,6 @@ public:
 Professors::Professors() {
   m_root = NULL;
   m_size = 0;
-
   // Loads all professors from database and inserts to tree
   std::ifstream file("professors.csv");
   std::string str;

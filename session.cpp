@@ -1,7 +1,10 @@
+
 /*
 This is a class that is designed to serve as an interface that can be easily
 linked to any web service or application. It allows the user to login, logout,
 register, check rating/reviews of professors and add new reviews
+
+Used libraries: iostream, sstream, cstring
 */
 
 class Session {
@@ -18,7 +21,7 @@ private:
   std::string rate(std::string user_input);
   std::string registr(std::string user_input);
   bool email_is_valid(std::string email);
-  bool loggedin;
+  bool is_loggedin;
   unsigned int location;
   unsigned int rating;
   const char* welcometext[2] = {
@@ -33,7 +36,7 @@ public:
 Session::Session() {
   allstudents = new Students;
   allprofessors = new Professors;
-  loggedin = false;
+  is_loggedin = false;
   location = 0;
   email = "";
   professor = "";
@@ -49,10 +52,9 @@ Session::~Session() {
 const char* Session::welcome(const char* query) { /*
   This function serves as a tunnel with
   */
-  std::cout << "QUERY IN WELCOME: "<< query << "\n";
   if(location == 0) { // when user enters program for the first time location is 0
     location = 1; // location is set to 1 because menu is printed (below)
-    return welcometext[loggedin];
+    return welcometext[is_loggedin];
   }
   else if(location == 1) { // set location according to user input and call function again
     if(strcmp(query, "2") == 0) location = 2;
@@ -61,7 +63,6 @@ const char* Session::welcome(const char* query) { /*
     else if(strcmp(query, "5") == 0) location = 5;
     else if(strcmp(query, "6") == 0) location = 6;
     else location = 0;
-    std::cout << "new location: " << location << "\n";
     return welcome("NONE");
   }
 
@@ -70,10 +71,10 @@ const char* Session::welcome(const char* query) { /*
     std::string str_response;
 
     if(location == 2) str_response = registr(str_query);
-    if(location == 3) str_response = login(str_query);
-    if(location == 4) str_response = logout(str_query);
-    if(location == 5) str_response = browse(str_query);
-    if(location == 6) str_response = rate(str_query);
+    else if(location == 3) str_response = login(str_query);
+    else if(location == 4) str_response = logout(str_query);
+    else if(location == 5) str_response = browse(str_query);
+    else if(location == 6) str_response = rate(str_query);
 
     char* chr_response = new char[str_response.length()+1];
     strcpy(chr_response, str_response.c_str());
@@ -86,13 +87,13 @@ std::string Session::browse(std::string professor_name) {
     return "Please, enter Professor's full name: ";
   else {
     location = 0;
-    return allprofessors->get_profile(professor_name) + welcometext[loggedin];
+    return allprofessors->get_profile(professor_name);
   }
 }
 
 std::string Session::login(std::string user_input) {
   // Make sure user is not already logged in
-  if(loggedin) {
+  if(is_loggedin) {
     location = 0;
     return "already logged in\n";
   }
@@ -117,7 +118,7 @@ std::string Session::login(std::string user_input) {
     else {
       std::string tmp_psw = get_hash_value(user_input);
       if(allstudents->check_password(email, tmp_psw)) {
-          loggedin = true;
+          is_loggedin = true;
           location = 0;
           return "log in succesful\n";
         }
@@ -129,14 +130,14 @@ std::string Session::login(std::string user_input) {
 
 std::string Session::logout(std::string user_input) {
   email.clear();
-  loggedin = false;
+  is_loggedin = false;
   location = 0;
   return "loggout succesful\n";
 }
 
 std::string Session::registr(std::string user_input) {
   // Make sure user is not already logged in
-  if(loggedin) {
+  if(is_loggedin) {
     location = 0;
     return "already logged in\n";
   }
@@ -158,7 +159,7 @@ std::string Session::registr(std::string user_input) {
     else { // user_input is password
       std::string tmp_psw = get_hash_value(user_input);
       allstudents->insert(email, tmp_psw);
-      loggedin = true;
+      is_loggedin = true;
       location = 0;
       return "registration succesful\n";
     }
